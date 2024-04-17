@@ -5,8 +5,31 @@ sitemap: false
 permalink: /test/
 ---
 
-# Group Members  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <!-- Add any necessary CSS here -->
+</head>
+<body>
 
+<div id="filter-options">
+    <label for="position-filter">Filter by Position:</label>
+    <select id="position-filter"  multiple  class = "bg-primary text-black">
+        <option value="all">All Positions</option>
+        <option value="Assistant Professor">Assistant Professor</option>
+        <option value="Undergraduate student">Undergraduate Student</option>
+        <option value="MS(R) student">MS(R) Student</option>
+        <option value="PhD student">PhD Student</option>
+        <option value="Research Assistant">Research Assistant</option>
+        <option value="Intern">Intern</option>
+        <!-- Add more options as needed -->
+    </select>
+</div>
+
+<div id="member-list">
 {% assign ap_members = '' | split: '' %}
 {% assign us_members = '' | split: '' %}
 {% assign msr_members = '' | split: '' %}
@@ -48,7 +71,7 @@ permalink: /test/
 <div class="row">
 {% endif %}
 
-<div class="col-sm-6 clearfix">
+<div class="col-sm-6 clearfix member" data-position="{{ member.position }}">
   <img src="{{ member.image }}" class="img-responsive" width="35%" style="float: left" />
   <h4>{{ member.name }}</h4>
   <i>{{ member.position }}, {{ member.affiliation }} <br>email: {{ member.email }}</i>
@@ -82,19 +105,46 @@ permalink: /test/
 {% if even_odd == 1 %}
 </div>
 {% endif %}
+</div>
 
 ## Alumni
 
 {% for member in sorted_members %}
 {% if member.display == 1 and member.alumni == 1 %}
 
-<div class="col-sm-12 clearfix">
+<div class="col-sm-12 clearfix member" data-position="{{ member.position }}">
   <img src="{{ member.image }}" class="img-thumbnail" width="100px" style="float: left" />
   <h4>{{ member.name }}</h4>
   <i>{{ member.position }}, {{ member.affiliation }} ({{ member.year }}) <br>email: {{ member.email }}</i>
   <h5>{{ member.alumni_current }}</h5>
 </div>
 
-
 {% endif %}
 {% endfor %}
+
+
+<!-- Add any necessary JavaScript here -->
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const positionFilter = document.getElementById('position-filter');
+    const memberList = document.getElementById('member-list');
+    const members = document.querySelectorAll('.member');
+
+    positionFilter.addEventListener('change', function () {
+        const selectedPositions = Array.from(positionFilter.selectedOptions).map(option => option.value);
+
+        members.forEach(member => {
+            const memberPosition = member.dataset.position;
+            if (selectedPositions.includes('all') || selectedPositions.includes(memberPosition)) {
+                member.style.display = 'block';
+            } else {
+                member.style.display = 'none';
+            }
+        });
+    });
+});
+
+</script>
+
+</body>
+</html>
